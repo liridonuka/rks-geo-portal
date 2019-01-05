@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load leaflet_tags %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Create your map</title>
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+    <link rel="stylesheet" href="{% static 'my_style/map.css' %}">
+    <link rel="stylesheet" href="{% static 'my_style/leaflet.groupedlayercontrol.css' %}">
+    <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/leaflet.groupedlayercontrol.js' %}"></script>
+
+  </head>
+  <body>
+    <h1>Navigation</h1>
+      <script type="text/javascript">
+        function map_layers(map, options){
+          var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}{y}{x}.png');
+          var layers = new L.GeoJSON.AJAX("{% url 'map:layers' %}",{
+            onEachFeature: function(feature,layer){
+              layer.bindPopup(feature.properties.name.toString());
+            }
+          });
+          layers.addTo(map);
+        }
+      </script>
+      {% leaflet_map "citymap" callback="window.map_layers" %}
+  </body>
+</html>
