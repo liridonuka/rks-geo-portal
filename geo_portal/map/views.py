@@ -12,3 +12,7 @@ class MapTemplateView(TemplateView):
 def layers_dataset(request):
     layers = serialize('geojson', models.Layers.objects.all())
     return HttpResponse(layers)
+
+def categories_dataset(request):
+    categories = serialize('geojson', models.LayersCategory.objects.all())
+    return HttpResponse(categories)

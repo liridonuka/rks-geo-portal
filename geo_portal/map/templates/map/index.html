@@ -19,12 +19,26 @@
       <script type="text/javascript">
         function map_layers(map, options){
           var osm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}{y}{x}.png');
-          var layers = new L.GeoJSON.AJAX("{% url 'map:layers' %}",{
-            onEachFeature: function(feature,layer){
-              layer.bindPopup(feature.properties.name.toString());
-            }
-          });
+          // var layers = new L.GeoJSON.AJAX("{% url 'map:layers' %}",{
+          //   onEachFeature: function(feature,layer){
+          //     layer.bindPopup(feature.properties.name.toString());
+          //   }
+          // });
+          var layers = new L.GeoJSON.AJAX("{% url 'map:layers' %}");
           layers.addTo(map);
+
+          // var categories = new L.GeoJSON.AJAX("{% url 'map:categories' %}")
+          var baseLayers = {
+            "OSM": osm
+          }
+
+          var groupedOverlays = {
+            "Layers": {
+              "layers": layers,
+            }
+          };
+
+          L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
         }
       </script>
       {% leaflet_map "citymap" callback="window.map_layers" %}
